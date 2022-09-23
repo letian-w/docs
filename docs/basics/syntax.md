@@ -326,6 +326,39 @@ Bracket pairs with nothing between them also have meaning; `m[]` selects all ite
 !!! tip "The similarity of index and argument notation is not accidental."
 
 
+### Indexing tables
+
+Tables are indexed first by row; second by column.
+```q
+q)t:([]name:`Tom`Dick`Harry;age:34 42 17)
+q)t[1;`age]
+42
+```
+Eliding an index gets all its values.
+```q
+q)t[;`age]
+34 42 17
+
+q)t[1;]
+name| `Dick
+age | 42
+```
+You can elide trailing indexes. (As in projecting a function.)
+```q
+q)t[1] 
+name| `Dick
+age | 42
+```
+Table columns are always indexed as symbols; rows as integers. 
+This permits a shorthand:
+```q
+q)t[`age]  / shorthand for t[;`age]
+34 42 17
+q)t`age
+34 42 17
+```
+
+
 ## Conditional evaluation and control statements
 
 A sequence of expressions separated by semicolons and surrounded by left and right brackets (`[` and `]`), where the left bracket is preceded immediately by a `$`, denotes [conditional evaluation](../ref/cond.md). 
@@ -382,6 +415,24 @@ q)"abcdef" 1 0 3
 <br>
 :fontawesome-solid-book: 
 [Iterators](../ref/iterators.md)
+
+
+### Infix and prefix notation have long right scope
+
+The right argument of a unary function, or a binary function applied infix,  is the result of evaluating (subject to parentheses) everything to its right.
+
+The left argument of a binary function applied infix is (subject to parentheses) the value immediately to its left. 
+
+```q
+q)count first (2 3 4;5 6)
+3
+```
+Above, the argument of `count` is `first (2 3 4;5 6)`; that is, `2 3 4`.
+```q
+q)2 3 * 4 5 - 6 7
+-4 -6
+```
+Above, the left argument of Multiply is `2 3` and its right argument is `4 5-6 7`; that is, `-2 -2`.
 
 
 ### Postfix yields infix
